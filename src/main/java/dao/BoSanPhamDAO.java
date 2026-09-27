@@ -113,10 +113,57 @@ public class BoSanPhamDAO implements DAOInterface<BoSanPham>{
 				BoSanPham boSanPham = new BoSanPham(maBoSanPham, maDinhDanhLuuKhoCaBo, maDinhDanhLuuKhoMonLe, soLuongMonLe);
 				kq.add(boSanPham);
 			}
+			//B5: Hủy kết nối tới cơ sở dữ liệu
+			JDBCUtil.closeConnection(c);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return kq;
 	}
 
+	public BoSanPham timKiemTheoMaBoSanPham(String maBoSanPhamTimKiem) {
+		BoSanPham kq = null;
+		try {
+			//B1: Kết nối tới cơ sở dữ liệu
+			Connection c = JDBCUtil.getConnection();
+			//B2: Viết câu lệnh sql và tạo PreparedStatement
+			String sql = "SELECT * FROM bosanpham"+
+						" WHERE (maBoSanPham=?)";
+			PreparedStatement pst = c.prepareStatement(sql);
+			pst.setString(1, maBoSanPhamTimKiem);
+			//B3: Thực thi câu lệnh sql
+			ResultSet rs = pst.executeQuery();
+			//B4: Xử lý kết quả
+			if (rs.next()) {
+				String maBoSanPham = rs.getString("maBoSanPham");
+				String maDinhDanhLuuKhoCaBo = rs.getString("maDinhDanhLuuKhoCaBo");
+				String maDinhDanhLuuKhoMonLe = rs.getString("maDinhDanhLuuKhoMonLe");
+				int soLuongMonLe = rs.getInt("soLuongMonLe");
+				kq = new BoSanPham(maBoSanPham, maDinhDanhLuuKhoCaBo, maDinhDanhLuuKhoMonLe, soLuongMonLe);
+			}
+			//B5: Hủy kết nối tới cơ sở dữ liệu
+			JDBCUtil.closeConnection(c);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return kq;
+	}
+	
+	public int laySoLuong() {
+		int kq = 0;
+		try {
+			Connection c = JDBCUtil.getConnection();
+			String sql = "SELECT COUNT(*) AS soLuong FROM bosanpham";
+			PreparedStatement pst = c.prepareStatement(sql);
+			ResultSet rs = pst.executeQuery();
+			if (rs.next()) {
+				kq = rs.getInt("soLuong");
+			}
+			JDBCUtil.closeConnection(c);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return kq;
+	}
 }

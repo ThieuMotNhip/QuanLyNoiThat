@@ -127,10 +127,55 @@ public class SanPhamBienTheDAO implements DAOInterface<SanPhamBienThe>{
 				SanPhamBienThe sanPhamBienThe = new SanPhamBienThe(maSanPhamBienThe, maSanPhamGoc, maDinhDanhLuuKho, mauSac, chatLieu, kichThuoc, giaBanChinhXac, soLuongTonKho);
 				kq.add(sanPhamBienThe);
 			}
+			//B5: Hủy kết nối tới cơ sở dữ liệu
+			JDBCUtil.closeConnection(c);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return kq;
 	}
 
+	public SanPhamBienThe timKiemTheoMaSanPhamBienThe(String maSanPhamBienTheTimKiem) {
+		SanPhamBienThe kq = null;
+		try {
+			Connection c = JDBCUtil.getConnection();
+			String sql = "SELECT * FROM sanphambienthe"+
+						" WHERE (maSanPhamBienThe=?)";
+			PreparedStatement pst = c.prepareStatement(sql);
+			pst.setString(1, maSanPhamBienTheTimKiem);
+			ResultSet rs = pst.executeQuery();
+			if (rs.next()) {
+				String maSanPhamBienThe = rs.getString("maSanPhamBienThe");
+				String maSanPhamGoc = rs.getString("maSanPhamGoc");
+				String maDinhDanhLuuKho = rs.getString("maDinhDanhLuuKho");
+				String mauSac = rs.getString("mauSac");
+				String chatLieu = rs.getString("chatLieu");
+				String kichThuoc = rs.getString("kichThuoc");
+				double giaBanChinhXac = rs.getDouble("giaBanChinhXac");
+				int soLuongTonKho = rs.getInt("soLuongTonKho");
+				kq = new SanPhamBienThe(maSanPhamBienThe, maSanPhamGoc, maDinhDanhLuuKho, mauSac, chatLieu, kichThuoc, giaBanChinhXac, soLuongTonKho);
+			}
+			JDBCUtil.closeConnection(c);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return kq;
+	}
+	
+	public int laySoLuong() {
+		int kq = 0;
+		try {
+			Connection c = JDBCUtil.getConnection();
+			String sql = "SELECT COUNT(*) AS soLuong FROM sanphambienthe";
+			PreparedStatement pst = c.prepareStatement(sql);
+			ResultSet rs = pst.executeQuery();
+			if (rs.next()) {
+				kq = rs.getInt("soLuong");
+			}
+			JDBCUtil.closeConnection(c);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return kq;
+	}
 }

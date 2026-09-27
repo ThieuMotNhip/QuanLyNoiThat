@@ -119,10 +119,52 @@ public class KhachHangDAO implements DAOInterface<KhachHang>{
 				KhachHang khachHang = new KhachHang(maKhachHang, username, tenKhachHang, soDienThoai, diaChiGiaoHang);
 				kq.add(khachHang);
 			}
+			//B5: Hủy kết nối tới cơ sở dữ liệu
+			JDBCUtil.closeConnection(c);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return kq;
 	}
 
+	public KhachHang timKiemTheoMaKhachHang(String maKhachHangTimKiem) {
+		KhachHang kq = null;
+		try {
+			Connection c = JDBCUtil.getConnection();
+			String sql = "SELECT * FROM khachhang"+
+						" WHERE (maKhachHang=?)";
+			PreparedStatement pst = c.prepareStatement(sql);
+			pst.setString(1, maKhachHangTimKiem);
+			ResultSet rs = pst.executeQuery();
+			if (rs.next()) {
+				String maKhachHang = rs.getString("maKhachHang");
+				String username = rs.getString("username");
+				String tenKhachHang = rs.getString("tenKhachHang");
+				String soDienThoai = rs.getString("soDienThoai");
+				String diaChiGiaoHang = rs.getString("diaChiGiaoHang");
+				kq = new KhachHang(maKhachHang, username, tenKhachHang, soDienThoai, diaChiGiaoHang);
+			}
+			JDBCUtil.closeConnection(c);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return kq;
+	}
+	
+	public int laySoLuong() {
+		int kq = 0;
+		try {
+			Connection c = JDBCUtil.getConnection();
+			String sql = "SELECT COUNT(*) AS soLuong FROM khachhang";
+			PreparedStatement pst = c.prepareStatement(sql);
+			ResultSet rs = pst.executeQuery();
+			if (rs.next()) {
+				kq = rs.getInt("soLuong");
+			}
+			JDBCUtil.closeConnection(c);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return kq;
+	}
 }

@@ -122,10 +122,71 @@ public class DonHangDAO implements DAOInterface<DonHang>{
 				DonHang donHang = new DonHang(maDonHang, maKhachHang, ngayDatHang, trangThai, tongGiaTriDonHang, soTienKhachHangDaDatCoc);
 				kq.add(donHang);
 			}
+			//B5: Hủy kết nối tới cơ sở dữ liệu
+			JDBCUtil.closeConnection(c);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return kq;
 	}
 
+	public DonHang timKiemTheoMaDonHang(String maDonHangTimKiem) {
+		DonHang kq = null;
+		try {
+			Connection c = JDBCUtil.getConnection();
+			String sql = "SELECT * FROM donhang"+
+						" WHERE (maDonHang=?)";
+			PreparedStatement pst = c.prepareStatement(sql);
+			pst.setString(1, maDonHangTimKiem);
+			ResultSet rs = pst.executeQuery();
+			if (rs.next()) {
+				String maDonHang = rs.getString("maDonHang");
+				String maKhachHang = rs.getString("maKhachHang");
+				Date ngayDatHang = rs.getDate("ngayDatHang");
+				String trangThai = rs.getString("trangThai");
+				double tongGiaTriDonHang = rs.getDouble("tongGiaTriDonHang");
+				double soTienKhachHangDaDatCoc = rs.getDouble("soTienKhachHangDaDatCoc");
+				kq = new DonHang(maDonHang, maKhachHang, ngayDatHang, trangThai, tongGiaTriDonHang, soTienKhachHangDaDatCoc);
+				
+			}
+			JDBCUtil.closeConnection(c);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return kq;
+	}
+	
+	public int laySoLuong() {
+		int kq = 0;
+		try {
+			Connection c = JDBCUtil.getConnection();
+			String sql = "SELECT COUNT(*) AS soLuong FROM donhang";
+			PreparedStatement pst = c.prepareStatement(sql);
+			ResultSet rs = pst.executeQuery();
+			if (rs.next()) {
+				kq = rs.getInt("soLuong");
+			}
+			JDBCUtil.closeConnection(c);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return kq;
+	}
+	
+	public double tinhTongThuNhap() {
+		double kq = 0;
+		try {
+			Connection c = JDBCUtil.getConnection();
+			String sql = "SELECT IFNULL(SUM(tongGiaTriDonHang), 0) AS tongThuNhap FROM donhang";
+			PreparedStatement pst = c.prepareStatement(sql);
+			ResultSet rs = pst.executeQuery();
+			if (rs.next()) {
+				kq = rs.getInt("tongThuNhap");
+			}
+			JDBCUtil.closeConnection(c);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return kq;
+	}
 }

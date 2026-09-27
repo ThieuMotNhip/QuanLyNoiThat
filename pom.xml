@@ -6,7 +6,7 @@
 	<artifactId>QuanLyNoiThat</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 
-	<!-- Khai báo các thư viện-->
+	<!-- Khai báo các thư viện bên ngoài hệ thống-->
 	<dependencies>
 		<!-- Source:
 		https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
@@ -36,11 +36,30 @@
 		<finalName>QuanLyNoiThat-ThieuMotNhip</finalName>
 		<plugins>
 			<plugin>
-				<!-- Source:
-			https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-jar-plugin -->
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<version>3.5.1</version>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>3.7.1</version>
+				<configuration>
+					<archive>
+						<manifest>
+							<!-- Thay bằng Class chứa hàm main của bạn -->
+							<mainClass>main.ChuongTrinhQuanLyNoiThat</mainClass>
+						</manifest>
+					</archive>
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
+				</configuration>
+				<executions>
+					<execution>
+						<id>make-assembly</id>
+						<phase>package</phase> <!-- Tự động chạy khi bạn gõ lệnh
+						mvn package / install -->
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>

@@ -110,17 +110,58 @@ public class ChiTietDonHangDAO implements DAOInterface<ChiTietDonHang>{
 			//B4: Xử lý kết quả
 			while (rs.next()) {
 				String maChiTietDonHang = rs.getString("maChiTietDonHang");
-				String maHoaDon = rs.getString("maHoaDon");
+				String maDonHang = rs.getString("maDonHang");
 				String maSanPhamBienThe = rs.getString("maSanPhamBienThe");
 				int soLuong = rs.getInt("soLuong");
 				double giaBan = rs.getDouble("giaBan");
 				ChiTietDonHang chiTietDonHang = new ChiTietDonHang(maChiTietDonHang, maChiTietDonHang, maSanPhamBienThe, soLuong, giaBan);
 				kq.add(chiTietDonHang);
 			}
+			//B5: Hủy kết nối tới cơ sở dữ liệu
+			JDBCUtil.closeConnection(c);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return kq;
 	}
 
+	public ChiTietDonHang timKiemTheoMaChiTietDonHang(String maChiTietDonHangTimKiem) {
+		ChiTietDonHang kq = null;
+		try {
+			Connection c = JDBCUtil.getConnection();
+			String sql = "SELECT * FROM chitietdonhang"+
+						" WHERE (maChiTietDonHang=?)";
+			PreparedStatement pst = c.prepareStatement(sql);
+			ResultSet rs = pst.executeQuery();
+			if (rs.next()) {
+				String maChiTietDonHang = rs.getString("maChiTietDonHang");
+				String maDonHang = rs.getString("maDonHang");
+				String maSanPhamBienThe = rs.getString("maSanPhamBienThe");
+				int soLuong = rs.getInt("soLuong");
+				double giaBan = rs.getDouble("giaBan");
+				kq = new ChiTietDonHang(maChiTietDonHang, maChiTietDonHang, maSanPhamBienThe, soLuong, giaBan);
+			}
+			JDBCUtil.closeConnection(c);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return kq;
+	}
+	
+	public int laySoLuong() {
+		int kq = 0;
+		try {
+			Connection c = JDBCUtil.getConnection();
+			String sql = "SELECT COUNT(*) AS soLuong FROM chitietdonhang";
+			PreparedStatement pst = c.prepareStatement(sql);
+			ResultSet rs = pst.executeQuery();
+			if (rs.next()) {
+				kq = rs.getInt("soLuong");
+			}
+			JDBCUtil.closeConnection(c);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return kq;
+	}
 }

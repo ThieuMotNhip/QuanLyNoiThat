@@ -118,10 +118,52 @@ public class MauSanPhamDAO implements DAOInterface<MauSanPham>{
 				MauSanPham mauSanPham = new MauSanPham(maSanPhamGoc, maDanhMuc, tenSanPham, giaBanCoBan, moTaChiTiet);
 				kq.add(mauSanPham);
 			}
+			//B5: Hủy kết nối tới cơ sở dữ liệu
+			JDBCUtil.closeConnection(c);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return kq;
 	}
 
+	public MauSanPham timKiemTheoMaSanPhamGoc(String maSanPhamGocTimKiem) {
+		MauSanPham kq = null;
+		try {
+			Connection c = JDBCUtil.getConnection();
+			String sql = "SELECT * FROM mausanpham"+
+						" WHERE (maSanPhamGoc=?)";
+			PreparedStatement pst = c.prepareStatement(sql);
+			pst.setString(1, maSanPhamGocTimKiem);
+			ResultSet rs = pst.executeQuery();
+			if (rs.next()) {
+				String maSanPhamGoc = rs.getString("maSanPhamGoc");
+				String maDanhMuc = rs.getString("maDanhMuc");
+				String tenSanPham = rs.getString("tenSanPham");
+				double giaBanCoBan = rs.getDouble("giaBanCoBan");
+				String moTaChiTiet = rs.getString("moTaChiTiet");
+				kq = new MauSanPham(maSanPhamGoc, maDanhMuc, tenSanPham, giaBanCoBan, moTaChiTiet);
+			}
+			JDBCUtil.closeConnection(c);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return kq;
+	}
+	
+	public int laySoLuong() {
+		int kq = 0;
+		try {
+			Connection c = JDBCUtil.getConnection();
+			String sql = "SELECT COUNT(*) AS soLuong FROM mausanpham";
+			PreparedStatement pst = c.prepareStatement(sql);
+			ResultSet rs = pst.executeQuery();
+			if (rs.next()) {
+				kq = rs.getInt("soLuong");
+			}
+			JDBCUtil.closeConnection(c);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return kq;
+	}
 }

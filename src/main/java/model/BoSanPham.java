@@ -1,5 +1,7 @@
 package model;
 
+import java.util.Objects;
+
 public class BoSanPham {
 	private String maBoSanPham, maDinhDanhLuuKhoCaBo, maDinhDanhLuuKhoMonLe;
 	private int soLuongMonLe;
@@ -53,6 +55,26 @@ public class BoSanPham {
 		return "BoSanPham [maBoSanPham=" + maBoSanPham + ", maDinhDanhLuuKhoCaBo=" + maDinhDanhLuuKhoCaBo
 				+ ", maDinhDanhLuuKhoMonLe=" + maDinhDanhLuuKhoMonLe + ", soLuongMonLe=" + soLuongMonLe + "]";
 	}
-	
-	
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(maBoSanPham, maDinhDanhLuuKhoCaBo, maDinhDanhLuuKhoMonLe, Integer.valueOf(soLuongMonLe));
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		BoSanPham other = (BoSanPham) obj;
+		return Objects.equals(maBoSanPham, other.maBoSanPham)
+				&& Objects.equals(maDinhDanhLuuKhoCaBo, other.maDinhDanhLuuKhoCaBo)
+				&& Objects.equals(maDinhDanhLuuKhoMonLe, other.maDinhDanhLuuKhoMonLe)
+				&& soLuongMonLe == other.soLuongMonLe;
+	}
+
+
 }

@@ -1,5 +1,7 @@
 package model;
 
+import java.util.Objects;
+
 public class SanPhamBienThe {
 	private String maSanPhamBienThe, maSanPhamGoc, maDinhDanhLuuKho, mauSac, chatLieu, kichThuoc;
 	private double giaBanChinhXac;
@@ -93,5 +95,30 @@ public class SanPhamBienThe {
 				+ ", kichThuoc=" + kichThuoc + ", giaBanChinhXac=" + giaBanChinhXac + ", soLuongTonKho=" + soLuongTonKho
 				+ "]";
 	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(chatLieu, Double.valueOf(giaBanChinhXac), kichThuoc, maDinhDanhLuuKho, maSanPhamBienThe,
+				maSanPhamGoc, mauSac, Integer.valueOf(soLuongTonKho));
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		SanPhamBienThe other = (SanPhamBienThe) obj;
+		return Objects.equals(chatLieu, other.chatLieu)
+				&& Double.doubleToLongBits(giaBanChinhXac) == Double.doubleToLongBits(other.giaBanChinhXac)
+				&& Objects.equals(kichThuoc, other.kichThuoc)
+				&& Objects.equals(maDinhDanhLuuKho, other.maDinhDanhLuuKho)
+				&& Objects.equals(maSanPhamBienThe, other.maSanPhamBienThe)
+				&& Objects.equals(maSanPhamGoc, other.maSanPhamGoc) && Objects.equals(mauSac, other.mauSac)
+				&& soLuongTonKho == other.soLuongTonKho;
+	}
+	
 	
 }

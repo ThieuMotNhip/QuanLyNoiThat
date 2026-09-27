@@ -1,6 +1,7 @@
 package model;
 
 import java.sql.Date;
+import java.util.Objects;
 
 public class DonHang {
 	private String maDonHang, maKhachHang;
@@ -76,6 +77,29 @@ public class DonHang {
 		return "DonHang [maDonHang=" + maDonHang + ", maKhachHang=" + maKhachHang + ", ngayDatHang=" + ngayDatHang
 				+ ", trangThai=" + trangThai + ", tongGiaTriDonHang=" + tongGiaTriDonHang + ", soTienKhachHangDaDatCoc="
 				+ soTienKhachHangDaDatCoc + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(maDonHang, maKhachHang, ngayDatHang, Double.valueOf(soTienKhachHangDaDatCoc),
+				Double.valueOf(tongGiaTriDonHang), trangThai);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		DonHang other = (DonHang) obj;
+		return Objects.equals(maDonHang, other.maDonHang) && Objects.equals(maKhachHang, other.maKhachHang)
+				&& Objects.equals(ngayDatHang, other.ngayDatHang)
+				&& Double.doubleToLongBits(soTienKhachHangDaDatCoc) == Double
+						.doubleToLongBits(other.soTienKhachHangDaDatCoc)
+				&& Double.doubleToLongBits(tongGiaTriDonHang) == Double.doubleToLongBits(other.tongGiaTriDonHang)
+				&& Objects.equals(trangThai, other.trangThai);
 	}
 	
 	

@@ -112,11 +112,76 @@ public class UserDAO implements DAOInterface<User>{
 				User user = new User(username, password, role);
 				kq.add(user);
 			}
+			//B5: Hủy kết nối tới cơ sở dữ liệu
+			JDBCUtil.closeConnection(c);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return kq;
 	}
 	
-
+	public boolean kiemTraAdminDangNhap(User t) {
+		boolean kq = false;
+		try {
+			//B1: Tạo kết nối tới cơ sở dữ liệu
+			Connection c = JDBCUtil.getConnection();
+			//B2: Viết câu lệnh sql và tạo đối tượng PreparedStatement
+			String sql = "SELECT * FROM user";
+			PreparedStatement pst = c.prepareStatement(sql);
+			//B3: Thực thi câu lệnh sql
+			ResultSet rs = pst.executeQuery();
+			//B4: Xử lý kết quả
+			while (rs.next()) {
+				if (rs.getString("role").equals("admin")) {
+					if (t.getUsername().equals(rs.getString("username")) && t.getPassword().endsWith(rs.getString("password"))) {
+						kq = true;
+					}
+				}
+			}
+			//B5: Hủy kết nối tới cơ sở dữ liệu
+			JDBCUtil.closeConnection(c);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return kq;
+	}
+	
+	public User timKiemTheoUsername(String usernameTimKiem) {
+		User kq = null;
+		try {
+			Connection c = JDBCUtil.getConnection();
+			String sql = "SELECT * FROM user"+
+						" WHERE (username=?)";
+			PreparedStatement pst = c.prepareStatement(sql);
+			pst.setString(1, usernameTimKiem);
+			ResultSet rs = pst.executeQuery();
+			if (rs.next()) {
+				String username = rs.getString("username");
+				String password = rs.getString("password");
+				String role = rs.getString("role");
+				kq = new User(username, password, role);
+			}
+			JDBCUtil.closeConnection(c);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return kq;
+	}
+	
+	public int laySoLuong() {
+		int kq = 0;
+		try {
+			Connection c = JDBCUtil.getConnection();
+			String sql = "SELECT COUNT(*) AS soLuong FROM user";
+			PreparedStatement pst = c.prepareStatement(sql);
+			ResultSet rs = pst.executeQuery();
+			if (rs.next()) {
+				kq = rs.getInt("soLuong");
+			}
+			JDBCUtil.closeConnection(c);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return kq;
+	}
 }
